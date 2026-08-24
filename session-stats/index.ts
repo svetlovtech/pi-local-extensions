@@ -312,14 +312,4 @@ export default function sessionStats(pi: unknown) {
 			handler,
 		});
 	}
-
-	// ctrl+p → prefill the /mcp command (pi-mcp-adapter panel). Enter still
-	// required — pi has no programmatic slash-command execution in 0.84.
-	(api as any).registerShortcut?.("ctrl+p", {
-		description: "Open /mcp (prefills editor)",
-		handler: async (ctx: any) => {
-			if (!ctx?.hasUI) return;
-			ctx.ui.setEditorText("/mcp");
-		},
-	});
 }
