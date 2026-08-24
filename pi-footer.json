@@ -16,16 +16,13 @@
       { "type": "model-provider", "options": { "raw": true } },
       { "type": "thinking-level", "options": { "raw": true, "hideWhenEmpty": true, "icon": "think: ", "fg": "magenta" } },
       { "type": "external-status", "options": { "externalStatusKey": "ctx", "icon": "ctx ", "hideWhenEmpty": true } },
-      { "type": "context-window", "options": { "icon": "win ", "tokenFormatStyle": "compact" } },
       { "type": "external-status", "options": { "externalStatusKey": "cache", "icon": "cache ", "hideWhenEmpty": true } },
       { "type": "cost", "options": { "costFormatStyle": "compact", "raw": true } },
       { "type": "external-status", "options": { "externalStatusKey": "execution-time", "hideWhenEmpty": true, "trimValue": 2 } }
     ],
     [
       { "type": "external-status", "options": { "externalStatusKey": "mcp-count", "hideWhenEmpty": true, "raw": true } },
-      { "type": "input-tokens", "options": { "tokenFormatStyle": "compact", "hideWhenZero": true, "icon": "in " } },
-      { "type": "cache-read", "options": { "tokenFormatStyle": "compact", "hideWhenZero": true, "icon": "cached " } },
-      { "type": "output-tokens", "options": { "tokenFormatStyle": "compact", "hideWhenZero": true, "icon": "out " } },
+      { "type": "total-tokens", "options": { "tokenFormatStyle": "compact", "icon": "tok " } },
       { "type": "total-time", "options": { "icon": "total " } },
       { "type": "external-status", "options": { "externalStatusKey": "active-time", "hideWhenEmpty": true, "raw": true } }
     ]

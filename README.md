@@ -7,6 +7,7 @@
 | `mcp-count/` | mcp-count | Считает включённые MCP-серверы из `~/.pi/agent/mcp.json`, публикует статус `mcp-count` (`MCP: N`) для pi-footer |
 | `ctx-cache-colors/` | ctx-cache-colors | 5-зонная цветовая индикация (ANSI 256) заполнения контекста (`ctx`) и cache hit rate (`cache`): чем хуже — тем «краснее» |
 | `active-time/` | active-time | Аккумулирует фактическое время работы агента (сумма отрезков `agent_start`→`agent_end`), публикует статус `active-time` (`act 4m 12s`) для pi-footer. Переживает перезапуск сессии через `appendEntry` |
+| `session-stats/` | session-stats | Команда `/stats` (алиасы `/statistics`, `/session-stats`): полный pwd + git, модель, времена, разбивка токенов, стоимость, использование контекста — всё, что не влезает в компактный футер |
 
 ## Установка
 
