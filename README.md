@@ -23,9 +23,13 @@
 }
 ```
 
+## Конфигурация pi-footer
+
+Актуальный конфиг футера хранится в этом репозитории: [`pi-footer.json`](pi-footer.json). Живая копия лежит в `~/.pi/agent/extensions/pi-footer.json` — при изменении не забывайте синхронизировать обе стороны.
+
 ## Отображение в pi-footer
 
-Оба расширения публикуют статусы через `ctx.ui.setStatus()`. В `~/.pi/agent/extensions/pi-footer.json` они выводятся виджетами `external-status`:
+Оба расширения публикуют статусы через `ctx.ui.setStatus()`. В `~/.pi/agent/extensions/pi-footer.json` (копия — [`pi-footer.json`](pi-footer.json)) они выводятся виджетами `external-status`:
 
 - `mcp-count` → `{ "type": "external-status", "externalStatusKey": "mcp-count", "raw": true }`
 - `ctx` / `cache` → `{ "type": "external-status", "externalStatusKey": "ctx" }` / `"cache"`
