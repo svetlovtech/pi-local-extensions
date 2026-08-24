@@ -1,0 +1,14 @@
+{
+  "name": "@svetlovtech/pi-local-extensions",
+  "version": "1.0.0",
+  "description": "Local pi extensions: mcp-count, ctx-cache-colors, active-time",
+  "private": true,
+  "license": "UNLICENSED",
+  "pi": {
+    "extensions": [
+      "./active-time/index.ts",
+      "./ctx-cache-colors/index.ts",
+      "./mcp-count/index.ts"
+    ]
+  }
+}

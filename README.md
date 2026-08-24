@@ -10,18 +10,13 @@
 
 ## Установка
 
-Скопировать каталог расширения в `~/.pi/agent/extensions/` (или указать путь в `settings.json` → `packages` как `extensions/<name>`), затем перезапустить Pi.
+Клонировать репозиторий в `~/.pi/agent/extensions/` — манифест `package.json` (поле `pi.extensions`) объявляет все три расширения, и Pi подхватит их автоматически при старте или `/reload`. Копировать каталоги по одному и прописывать пути в `settings.json` не нужно.
 
-Пример для settings.json:
-
-```json
-{
-  "packages": [
-    "extensions/mcp-count",
-    "extensions/ctx-cache-colors"
-  ]
-}
+```bash
+git clone https://github.com/svetlovtech/pi-local-extensions.git ~/.pi/agent/extensions/svetlovtech-pi-local-extensions
 ```
+
+Альтернатива для кастомных путей — указать путь к репозиторию в `settings.json` → `packages`.
 
 ## Конфигурация pi-footer
 
