@@ -173,6 +173,9 @@ export default function sessionStats(pi: unknown) {
 			if (entry.customType && /skill/i.test(entry.customType)) skillsUsed.add(entry.customType);
 		}
 		const totalTokens = input + output + cacheRead + cacheWrite + reasoning;
+		// Cache hit rate over all prompt tokens (what could have been cached).
+		const promptTokens = input + cacheRead + cacheWrite;
+		const cacheHitPct = promptTokens > 0 ? Math.round((cacheRead / promptTokens) * 100) : null;
 
 		// ── workspace ───────────────────────────────────────────────────
 		const home = homedir();
@@ -292,6 +295,7 @@ export default function sessionStats(pi: unknown) {
 			`  input       ${fmt(input)}`,
 			`  cached      ${fmt(cacheRead)} read · ${fmt(cacheWrite)} write`,
 			`  output      ${fmt(output)}${reasoning ? ` (+${fmt(reasoning)} reasoning)` : ""}`,
+			cacheHitPct !== null ? `Cache hit:    ${cacheHitPct}% (${fmt(cacheRead)} of ${fmt(promptTokens)} prompt tokens)` : null,
 			`Cost:         $${cost.toFixed(4)}`,
 			ctxLine,
 			sessionFileLine,
@@ -308,4 +312,14 @@ export default function sessionStats(pi: unknown) {
 			handler,
 		});
 	}
+
+	// ctrl+p → prefill the /mcp command (pi-mcp-adapter panel). Enter still
+	// required — pi has no programmatic slash-command execution in 0.84.
+	(api as any).registerShortcut?.("ctrl+p", {
+		description: "Open /mcp (prefills editor)",
+		handler: async (ctx: any) => {
+			if (!ctx?.hasUI) return;
+			ctx.ui.setEditorText("/mcp");
+		},
+	});
 }
