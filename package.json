@@ -8,7 +8,6 @@
     "extensions": [
       "./active-time/index.ts",
       "./ctx-cache-colors/index.ts",
-      "./mcp-count/index.ts",
       "./session-stats/index.ts"
     ]
   }

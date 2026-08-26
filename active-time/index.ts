@@ -31,8 +31,14 @@ function formatElapsed(ms: number): string {
 	const minutes = totalMinutes % 60;
 	const hours = Math.floor(totalMinutes / 60);
 
+	// Компактный формат для footer: секунды показываем только первые 10 минут,
+	// дальше минутной точности достаточно.
 	if (hours > 0) {
-		return `${hours}h ${pad2(minutes)}m ${pad2(seconds)}s`;
+		return minutes === 0 ? `${hours}h` : `${hours}h ${pad2(minutes)}m`;
+	}
+
+	if (totalMinutes >= 10) {
+		return `${totalMinutes}m`;
 	}
 
 	if (minutes > 0) {

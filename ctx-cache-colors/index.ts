@@ -96,7 +96,11 @@ function update(ctx: ExtensionContext): void {
     ctx.ui.setStatus(CACHE_STATUS_KEY, undefined);
   } else {
     const hitRate = (metrics.cacheRead / metrics.promptTokens) * 100;
-    ctx.ui.setStatus(CACHE_STATUS_KEY, paint(`${hitRate.toFixed(0)}%`, colorForRisk(100 - hitRate)));
+    // Иконка зашита в значение: с raw:true в pi-footer опция icon игнорируется.
+    ctx.ui.setStatus(
+      CACHE_STATUS_KEY,
+      paint(`󰓎${hitRate.toFixed(0)}%`, colorForRisk(100 - hitRate)),
+    );
   }
 }
 
