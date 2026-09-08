@@ -1,0 +1,12 @@
+{
+  "name": "schema-sanitizer",
+  "version": "1.0.0",
+  "description": "Rewrites regex lookarounds in outgoing tool JSON schemas so OpenAI-compatible gateways (RE2-style validators) accept them",
+  "type": "module",
+  "license": "MIT",
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
