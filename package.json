@@ -9,7 +9,8 @@
       "./active-time/index.ts",
       "./ctx-cache-colors/index.ts",
       "./session-stats/index.ts",
-      "./schema-sanitizer/index.ts"
+      "./schema-sanitizer/index.ts",
+      "./pi-custom-providers/index.ts"
     ]
   }
 }
