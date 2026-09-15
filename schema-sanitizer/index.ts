@@ -15,6 +15,20 @@
  *  - any other lookaround pattern is dropped (descriptions + runtime validation
  *    in the tool handlers still enforce the constraint).
  *
+ * RE2 also does NOT support `\uXXXX` unicode escapes in patterns (Go regexp:
+ * "invalid escape sequence: \u" — observed as HTTP 400 from gonkarouter.io on
+ * every request carrying delegate_flow/delegate_task after the lookaround fix
+ * above rewrote their patterns into `^[^\u0000-\u001F\u007F-\u009F]+$`).
+ * Therefore every `\uXXXX` escape in a pattern is additionally rewritten to an
+ * equivalent all-engines form before the request goes out:
+ *
+ *  - code point <= 0xFF  -> `\xNN`   (valid in RE2/Go, JavaScript, Python alike);
+ *  - code point >  0xFF  -> the literal character (never a regex metachar;
+ *    valid in RE2, JavaScript, and Python as a plain literal).
+ *
+ * The rewrite is purely syntactic over the regex SOURCE and preserves matching
+ * semantics in every engine that accepted the original pattern.
+ *
  * Hooks `before_provider_request`, so it survives package reinstalls/updates and
  * covers all tools: built-in, extension packages, and MCP-adapter tools.
  */
@@ -39,6 +53,28 @@ function log(message) {
 // Matches lookaround assertions anywhere in a pattern string.
 const LOOKAROUND_RE = /\(\?<?[=!]/;
 
+// Matches a \uXXXX unicode escape (regex-source syntax).
+const UNICODE_ESCAPE_RE = /\\u([0-9a-fA-F]{4})/g;
+
+/**
+ * Rewrite \uXXXX escapes to their RE2-compatible equivalents.
+ * Returns undefined when the pattern contains no \u escapes (nothing to do).
+ *
+ * \xNN (and literal non-ASCII characters) are accepted identically by RE2/Go,
+ * JavaScript RegExp, and Python re, so matching semantics are unchanged for
+ * every engine — including the ones that understood \u all along.
+ */
+function rewriteUnicodeEscapes(pattern) {
+	if (typeof pattern !== "string" || !pattern.includes("\\u")) return undefined;
+	return pattern.replace(UNICODE_ESCAPE_RE, (_esc, hex) => {
+		const cp = parseInt(hex, 16);
+		if (cp <= 0xff) return "\\x" + cp.toString(16).padStart(2, "0");
+		// Non-ASCII: a literal character. Regex metacharacters are all ASCII,
+		// so a literal non-ASCII rune is unambiguous in every engine.
+		return String.fromCodePoint(cp);
+	});
+}
+
 /**
  * Exact lookaround-free rewrite for the common "no char from class R anywhere"
  * idiom: ^(?![\s\S]*[R])[\s\S]+$  ->  ^[^R]+$
@@ -59,8 +95,13 @@ function rewriteNegatedScanIdiom(pattern) {
 
 /** Sanitize one regex pattern string. Returns fixed pattern, or null to drop. */
 function sanitizePattern(pattern) {
-	if (typeof pattern !== "string" || !LOOKAROUND_RE.test(pattern)) return pattern;
-	const rewritten = rewriteNegatedScanIdiom(pattern);
+	if (typeof pattern !== "string") return pattern;
+	// 1) \uXXXX escapes are rejected by RE2 outright — rewrite them first so the
+	//    lookaround rewrite below sees (and emits) RE2-friendly syntax.
+	const base = rewriteUnicodeEscapes(pattern) ?? pattern;
+	// 2) Lookaround assertions are the other RE2 dealbreaker.
+	if (!LOOKAROUND_RE.test(base)) return base;
+	const rewritten = rewriteNegatedScanIdiom(base);
 	if (rewritten) return rewritten;
 	return null; // unsupported lookaround shape: drop, runtime validation remains
 }
@@ -95,7 +136,13 @@ function sanitizeSchemaNode(node, pointer, fixes) {
 				fixes.push(`${pointer}/patternProperties key (entry dropped)`);
 				continue;
 			}
-			sanitizeSchemaNode(node.patternProperties[key], `${pointer}/patternProperties`, fixes);
+			const newKey = rewriteUnicodeEscapes(key) ?? key;
+			if (newKey !== key) {
+				node.patternProperties[newKey] = node.patternProperties[key];
+				delete node.patternProperties[key];
+				fixes.push(`${pointer}/patternProperties key (rewritten)`);
+			}
+			sanitizeSchemaNode(node.patternProperties[newKey], `${pointer}/patternProperties`, fixes);
 		}
 	}
 	for (const key of Object.keys(node)) {
