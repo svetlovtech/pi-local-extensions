@@ -1,7 +1,7 @@
 {
   "name": "@svetlovtech/pi-local-extensions",
   "version": "1.0.0",
-  "description": "Local pi extensions: mcp-count, ctx-cache-colors, active-time, schema-sanitizer",
+  "description": "Local pi extensions: mcp-count, ctx-cache-colors, active-time, schema-sanitizer, pi-custom-providers",
   "private": true,
   "license": "UNLICENSED",
   "pi": {

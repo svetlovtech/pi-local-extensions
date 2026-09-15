@@ -242,7 +242,7 @@ export default function sessionStats(pi: unknown) {
 		let piVersion = "";
 		try {
 			const pkg = readJson(
-				"/home/ubuntu/.npm-global/lib/node_modules/@earendil-works/pi-coding-agent/package.json",
+				join(homedir(), ".npm-global/lib/node_modules/@earendil-works/pi-coding-agent/package.json"),
 			);
 			piVersion = pkg?.version ? `pi ${pkg.version}` : "";
 		} catch {

@@ -1,0 +1,15 @@
+{
+  "name": "pi-custom-providers",
+  "version": "0.1.0",
+  "description": "Custom providers: Opencode GO and Gonka",
+  "type": "module",
+  "license": "MIT",
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  }
+}
